@@ -1,0 +1,48 @@
+﻿<Window x:Class="UI_WPF.ProductListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Product List" Height="450" Width="600">
+    <StackPanel>
+        <TextBlock Text="Product List" FontSize="20" FontWeight="Bold" Margin="10"/>
+        <DataGrid ItemsSource="{Binding Products}" AutoGenerateColumns="False" IsReadOnly="True" 
+                  SelectedItem="{Binding SelectedProduct}" Margin="10">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150"/>
+                <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="150"/>
+                <DataGridTextColumn Header="Manufacturer" Binding="{Binding Manufacturer.Name}" Width="150"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+            <Button Content="Add Product"
+        Command="{Binding AddProductCommand}"
+        Margin="10"
+        HorizontalAlignment="Left" 
+        VerticalAlignment="Top"/>
+
+            <Button Content="Edit Product"
+        Command="{Binding EditProductCommand}"
+        CommandParameter="{Binding SelectedProduct}" 
+        Margin="10" 
+        HorizontalAlignment="Left" 
+        VerticalAlignment="Top"
+        IsEnabled="{Binding IsEditEnabled}"/>
+            <!-- Bind to IsEditEnabled -->
+
+            <Button Content="Delete Product"
+        Command="{Binding DeleteProductCommand}"
+        CommandParameter="{Binding SelectedProduct}" 
+        Margin="10" 
+        HorizontalAlignment="Left" 
+        VerticalAlignment="Top"
+        IsEnabled="{Binding IsDeleteEnabled}"/>
+            <!-- Bind to IsDeleteEnabled -->
+
+            <Button Content="Go to Manufacturer List"
+        Command="{Binding GoToManufacturerListCommand}"
+        Margin="10" 
+        HorizontalAlignment="Left" 
+        VerticalAlignment="Top"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

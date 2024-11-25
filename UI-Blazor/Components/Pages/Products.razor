@@ -1,0 +1,25 @@
+﻿@page "/products"
+@attribute [StreamRendering]
+@inject DAOService DAOService
+@using INTERFACES
+
+<PageTitle>Products</PageTitle>
+
+
+<h3>Produkty</h3>
+
+<ul>
+    @foreach (var product in products)
+    {
+        <li>@product.Name (@product.Manufacturer.Name)</li>
+    }
+</ul>
+
+@code {
+    private IEnumerable<IProduct> products;
+
+    protected override void OnInitialized()
+    {
+        products = DAOService.GetAllProducts();
+    }
+}

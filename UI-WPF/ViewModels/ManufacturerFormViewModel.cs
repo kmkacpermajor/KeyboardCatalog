@@ -9,15 +9,15 @@ namespace UI_WPF.ViewModels
 {
     public class ManufacturerFormViewModel : ViewModelBase, IDataErrorInfo
     {
-        private readonly IManufacturerRepository _manufacturerRepository;
+        private readonly IDAO _dao;
         public IManufacturer Manufacturer { get; set; }
 
         public ICommand SaveCommand { get; }
         private Window _window;
 
-        public ManufacturerFormViewModel(IManufacturerRepository manufacturerRepository, Window window, IManufacturer manufacturer = null)
+        public ManufacturerFormViewModel(IDAO dao, Window window, IManufacturer manufacturer = null)
         {
-            _manufacturerRepository = manufacturerRepository;
+            _dao = dao;
             _window = window;
 
             // Initialize the Manufacturer
@@ -46,11 +46,11 @@ namespace UI_WPF.ViewModels
             {
                 if (Manufacturer.Id == 0) // New manufacturer
                 {
-                    _manufacturerRepository.Add(Manufacturer);
+                    _dao.Add(Manufacturer);
                 }
                 else // Existing manufacturer
                 {
-                    _manufacturerRepository.Update(Manufacturer);
+                    _dao.Update(Manufacturer);
                 }
                 CloseForm();
             }

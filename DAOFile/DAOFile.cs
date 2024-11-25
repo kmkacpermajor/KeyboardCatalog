@@ -1,25 +1,34 @@
-﻿using INTERFACES;
+﻿using CORE;
+using INTERFACES;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace DAO
+namespace DAOFile
 {
-    public class DAOFile : IProductRepository, IManufacturerRepository
+    public class DAOFile : IDAO, IDisposable
     {
         private readonly string _filePathProducts = "products.json";
         private readonly string _filePathManufacturers = "manufacturers.json";
         private List<IProduct> _products;
         private List<IManufacturer> _manufacturers;
 
+        private bool _disposed = false;
+
+        // Counters for assigning IDs
+        private int _nextProductId;
+        private int _nextManufacturerId;
+
         public DAOFile()
         {
-            _products = LoadProducts();
             _manufacturers = LoadManufacturers();
+            _products = LoadProducts();
+
+            // Set counters based on current data
+            _nextProductId = _products.Any() ? _products.Max(p => p.Id) + 1 : 1;
+            _nextManufacturerId = _manufacturers.Any() ? _manufacturers.Max(m => m.Id) + 1 : 1;
         }
 
         // Product methods
@@ -29,6 +38,7 @@ namespace DAO
 
         public void Add(IProduct product)
         {
+            product.Id = _nextProductId++;
             _products.Add(product);
             SaveProducts();
         }
@@ -61,6 +71,7 @@ namespace DAO
 
         public void Add(IManufacturer manufacturer)
         {
+            manufacturer.Id = _nextManufacturerId++;
             _manufacturers.Add(manufacturer);
             SaveManufacturers();
         }
@@ -93,12 +104,30 @@ namespace DAO
                 return new List<IProduct>();
 
             var json = File.ReadAllText(_filePathProducts);
-            return JsonSerializer.Deserialize<List<IProduct>>(json) ?? new List<IProduct>();
+            var productDataList = JsonSerializer.Deserialize<List<Dictionary<string, JsonElement>>>(json) ?? new List<Dictionary<string, JsonElement>>();
+
+            var products = productDataList.Select(pd => new Product
+            {
+                Id = pd["Id"].GetInt32(),
+                Name = pd["Name"].GetString(),
+                Type = Enum.Parse<KeyboardType>(pd["Type"].GetString()),
+                Manufacturer = GetManufacturerById(pd["ManufacturerId"].GetInt32())
+            }).Cast<IProduct>().ToList();
+
+            return products;
         }
 
         private void SaveProducts()
         {
-            var json = JsonSerializer.Serialize(_products);
+            var productDataList = _products.Select(p => new Dictionary<string, object>
+            {
+                { "Id", p.Id },
+                { "Name", p.Name },
+                { "Type", p.Type.ToString() },
+                { "ManufacturerId", p.Manufacturer.Id }
+            }).ToList();
+
+            var json = JsonSerializer.Serialize(productDataList);
             File.WriteAllText(_filePathProducts, json);
         }
 
@@ -109,13 +138,39 @@ namespace DAO
                 return new List<IManufacturer>();
 
             var json = File.ReadAllText(_filePathManufacturers);
-            return JsonSerializer.Deserialize<List<IManufacturer>>(json) ?? new List<IManufacturer>();
+            var manufacturerDataList = JsonSerializer.Deserialize<List<Dictionary<string, JsonElement>>>(json) ?? new List<Dictionary<string, JsonElement>>();
+
+            var manufacturers = manufacturerDataList.Select(md => new Manufacturer
+            {
+                Id = md["Id"].GetInt32(),
+                Name = md["Name"].GetString()
+            }).Cast<IManufacturer>().ToList();
+
+            return manufacturers;
         }
 
         private void SaveManufacturers()
         {
             var json = JsonSerializer.Serialize(_manufacturers);
             File.WriteAllText(_filePathManufacturers, json);
+        }
+
+        // Dispose method to save changes before object is collected
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                SaveManufacturers();
+                SaveProducts();
+                _disposed = true;
+            }
+            GC.SuppressFinalize(this);
+        }
+
+        // Finalizer
+        ~DAOFile()
+        {
+            Dispose();
         }
     }
 }

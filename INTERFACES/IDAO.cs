@@ -1,13 +1,16 @@
-﻿using System;
+﻿using CORE;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace INTERFACES
 {
-    public interface IManufacturerRepository
+    public interface IDAO
     {
+        IEnumerable<IProduct> GetAllProducts();
+        IProduct GetProductById(int id);
+        void Add(IProduct product);
+        void Update(IProduct product);
+        void DeleteProduct(int id);
+
         IEnumerable<IManufacturer> GetAllManufacturers();
         IManufacturer GetManufacturerById(int id);
         void Add(IManufacturer manufacturer);

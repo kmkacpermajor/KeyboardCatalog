@@ -11,8 +11,7 @@ namespace UI_WPF.ViewModels
 {
     public class ProductFormViewModel : ViewModelBase, IDataErrorInfo
     {
-        private readonly IProductRepository _productRepository;
-        private readonly IManufacturerRepository _manufacturerRepository;
+        private readonly IDAO _dao;
         public IProduct Product { get; set; }
         public ObservableCollection<IManufacturer> Manufacturers { get; set; }
 
@@ -22,39 +21,23 @@ namespace UI_WPF.ViewModels
 
         private Window _window;
 
-        public ProductFormViewModel(IProductRepository productRepository,
-                            IManufacturerRepository manufacturerRepository,
+        public ProductFormViewModel(IDAO dao,
                             Window window,
                             IProduct product = null)
         {
-            _productRepository = productRepository;
-            _manufacturerRepository = manufacturerRepository;
+            _dao = dao;
             _window = window;
 
-            // Initialize the Product
             Product = product ?? new Product();
 
-            // Populate the Manufacturers collection
-            Manufacturers = new ObservableCollection<IManufacturer>(_manufacturerRepository.GetAllManufacturers());
+            Manufacturers = new ObservableCollection<IManufacturer>(_dao.GetAllManufacturers());
 
-            // Set the default selected Manufacturer if available
             if (Product.Id == 0 && Manufacturers.Count > 0)
             {
                 Product.Manufacturer = Manufacturers[0]; // Set to the first item
             }
 
             SaveCommand = new RelayCommand<object>(_ => Save());
-
-            // Subscribe to property changes
-            PropertyChanged += (sender, args) =>
-            {
-                if (args.PropertyName == nameof(Product.Name) ||
-                    args.PropertyName == nameof(Product.Type) ||
-                    args.PropertyName == nameof(Product.Manufacturer))
-                {
-                    ((RelayCommand<object>)SaveCommand).RaiseCanExecuteChanged();
-                }
-            };
         }
 
         private bool CanSave()
@@ -72,11 +55,11 @@ namespace UI_WPF.ViewModels
             {
                 if (Product.Id == 0) // New product
                 {
-                    _productRepository.Add(Product);
+                    _dao.Add(Product);
                 }
                 else // Existing product
                 {
-                    _productRepository.Update(Product);
+                    _dao.Update(Product);
                 }
                 CloseForm(); // Close the form after saving
             }

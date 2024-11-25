@@ -6,10 +6,10 @@ namespace UI_WPF
 {
     public partial class ProductListWindow : Window
     {
-        public ProductListWindow(IProductRepository productRepository, IManufacturerRepository manufacturerRepository)
+        public ProductListWindow(IDAO dao)
         {
             InitializeComponent();
-            DataContext = new ProductListViewModel(productRepository, manufacturerRepository);
+            DataContext = new ProductListViewModel(dao);
         }
     }
 }

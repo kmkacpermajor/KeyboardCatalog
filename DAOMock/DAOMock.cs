@@ -1,13 +1,12 @@
 ﻿using CORE;
-using DAO.DAO;
 using INTERFACES;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DAO
+namespace DAOMock
 {
-    public class DAOMock : IProductRepository, IManufacturerRepository
+    public class DAOMock : IDAO
     {
         private List<IProduct> _products = new List<IProduct>();
         private List<IManufacturer> _manufacturers = new List<IManufacturer>();

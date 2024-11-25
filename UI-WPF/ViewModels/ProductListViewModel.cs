@@ -7,8 +7,7 @@ namespace UI_WPF.ViewModels
 {
     public class ProductListViewModel : ViewModelBase
     {
-        private readonly IProductRepository _productRepository;
-        private readonly IManufacturerRepository _manufacturerRepository;
+        private readonly IDAO _dao;
 
         public ObservableCollection<IProduct> Products { get; set; }
 
@@ -33,13 +32,11 @@ namespace UI_WPF.ViewModels
         public bool IsEditEnabled => SelectedProduct != null; // Inline check for Edit button
         public bool IsDeleteEnabled => SelectedProduct != null; // Inline check for Delete button
 
-        public ProductListViewModel(IProductRepository productRepository,
-                                    IManufacturerRepository manufacturerRepository)
+        public ProductListViewModel(IDAO dao)
         {
-            _productRepository = productRepository;
-            _manufacturerRepository = manufacturerRepository;
+            _dao = dao;
 
-            Products = new ObservableCollection<IProduct>(_productRepository.GetAllProducts());
+            Products = new ObservableCollection<IProduct>(_dao.GetAllProducts());
 
             AddProductCommand = new RelayCommand<object>(_ => OpenAddProductForm());
             EditProductCommand = new RelayCommand<IProduct>(OpenEditProductForm, CanEditProduct);
@@ -49,7 +46,7 @@ namespace UI_WPF.ViewModels
 
         private void OpenAddProductForm()
         {
-            var productForm = new ProductFormWindow(_productRepository, _manufacturerRepository);
+            var productForm = new ProductFormWindow(_dao);
             productForm.ShowDialog();
             RefreshProducts();
         }
@@ -58,7 +55,7 @@ namespace UI_WPF.ViewModels
         {
             if (product == null) return;
 
-            var productForm = new ProductFormWindow(_productRepository, _manufacturerRepository, product);
+            var productForm = new ProductFormWindow(_dao, product);
             productForm.ShowDialog();
             RefreshProducts();
         }
@@ -67,14 +64,14 @@ namespace UI_WPF.ViewModels
         {
             if (product == null) return;
 
-            _productRepository.DeleteProduct(product.Id);
+            _dao.DeleteProduct(product.Id);
             RefreshProducts();
         }
 
         private void RefreshProducts()
         {
             Products.Clear();
-            var sortedProducts = _productRepository.GetAllProducts().OrderBy(p => p.Id); // Sort by ID
+            var sortedProducts = _dao.GetAllProducts().OrderBy(p => p.Id); // Sort by ID
             foreach (var product in sortedProducts)
             {
                 Products.Add(product);
@@ -94,7 +91,7 @@ namespace UI_WPF.ViewModels
         // Open the Manufacturer List window
         private void OpenManufacturerList()
         {
-            var manufacturerListWindow = new ManufacturerListWindow(_manufacturerRepository);
+            var manufacturerListWindow = new ManufacturerListWindow(_dao);
             manufacturerListWindow.Show();
         }
     }

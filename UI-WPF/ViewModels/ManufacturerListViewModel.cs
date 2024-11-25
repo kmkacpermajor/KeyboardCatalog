@@ -7,7 +7,7 @@ namespace UI_WPF.ViewModels
 {
     public class ManufacturerListViewModel : ViewModelBase
     {
-        private readonly IManufacturerRepository _manufacturerRepository;
+        private readonly IDAO _dao;
 
         public ObservableCollection<IManufacturer> Manufacturers { get; set; }
 
@@ -31,11 +31,11 @@ namespace UI_WPF.ViewModels
         public bool IsEditEnabled => SelectedManufacturer != null; // Inline check for Edit button
         public bool IsDeleteEnabled => SelectedManufacturer != null; // Inline check for Delete button
 
-        public ManufacturerListViewModel(IManufacturerRepository manufacturerRepository)
+        public ManufacturerListViewModel(IDAO dao)
         {
-            _manufacturerRepository = manufacturerRepository;
+            _dao = dao;
 
-            Manufacturers = new ObservableCollection<IManufacturer>(_manufacturerRepository.GetAllManufacturers());
+            Manufacturers = new ObservableCollection<IManufacturer>(_dao.GetAllManufacturers());
 
             AddManufacturerCommand = new RelayCommand<object>(_ => OpenAddManufacturerForm());
             EditManufacturerCommand = new RelayCommand<IManufacturer>(OpenEditManufacturerForm, CanEditManufacturer);
@@ -44,7 +44,7 @@ namespace UI_WPF.ViewModels
 
         private void OpenAddManufacturerForm()
         {
-            var manufacturerForm = new ManufacturerFormWindow(_manufacturerRepository);
+            var manufacturerForm = new ManufacturerFormWindow(_dao);
             if (manufacturerForm.ShowDialog() == true) // Check if the form was successful
             {
                 RefreshManufacturers(); // Refresh the list after adding a new manufacturer
@@ -55,7 +55,7 @@ namespace UI_WPF.ViewModels
         {
             if (manufacturer == null) return;
 
-            var manufacturerForm = new ManufacturerFormWindow(_manufacturerRepository, manufacturer);
+            var manufacturerForm = new ManufacturerFormWindow(_dao, manufacturer);
             if (manufacturerForm.ShowDialog() == true) // Check if the form was successful
             {
                 RefreshManufacturers(); // Refresh the list after editing
@@ -69,7 +69,7 @@ namespace UI_WPF.ViewModels
             // Confirm deletion
             if (MessageBox.Show($"Are you sure you want to delete {manufacturer.Name}?", "Confirm Delete", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                _manufacturerRepository.DeleteManufacturer(manufacturer.Id);
+                _dao.DeleteManufacturer(manufacturer.Id);
                 RefreshManufacturers();
             }
         }
@@ -77,7 +77,7 @@ namespace UI_WPF.ViewModels
         private void RefreshManufacturers()
         {
             Manufacturers.Clear();
-            var sortedManufacturers = _manufacturerRepository.GetAllManufacturers().OrderBy(m => m.Id); // Sort by ID
+            var sortedManufacturers = _dao.GetAllManufacturers().OrderBy(m => m.Id); // Sort by ID
             foreach (var manufacturer in sortedManufacturers)
             {
                 Manufacturers.Add(manufacturer);

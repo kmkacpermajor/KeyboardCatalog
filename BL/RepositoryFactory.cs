@@ -1,54 +1,33 @@
 ﻿using INTERFACES;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Configuration;
 
 namespace BL
 {
-    public static class RepositoryFactory
+    public static class DAOFactory
     {
-        private static IConfigurationRoot _config;
-
-        static RepositoryFactory()
+        public static IDAO CreateDAO()
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json");
-            _config = builder.Build();
+            string libraryName = ConfigurationManager.AppSettings["libraryFile"];
+
+            Assembly assembly = Assembly.UnsafeLoadFrom(libraryName);
+            Type typeToCreate = null;
+
+            foreach (Type t in assembly.GetTypes())
+            {
+                if (t.IsAssignableTo(typeof(IDAO)))
+                {
+                    typeToCreate = t;
+                    break;
+                }
+            }
+            return Activator.CreateInstance(typeToCreate) as IDAO;
         }
 
-        public static IProductRepository CreateProductRepository()
-        {
-            // Pobranie nazwy typu z pliku konfiguracyjnego
-            string typeName = _config["DAOImplementation"];
-            if (string.IsNullOrEmpty(typeName))
-                throw new InvalidOperationException("Nie znaleziono typu DAO w konfiguracji.");
-
-            // Załaduj odpowiednie assembly i utwórz instancję
-            var type = Type.GetType(typeName);
-            if (type == null)
-                throw new TypeLoadException($"Nie udało się załadować typu: {typeName}");
-
-            return (IProductRepository)Activator.CreateInstance(type);
-        }
-
-        public static IManufacturerRepository CreateManufacturerRepository()
-        {
-            // Pobranie nazwy typu z pliku konfiguracyjnego
-            string typeName = _config["DAOImplementation"];
-            if (string.IsNullOrEmpty(typeName))
-                throw new InvalidOperationException("Nie znaleziono typu DAO w konfiguracji.");
-
-            // Załaduj odpowiednie assembly i utwórz instancję
-            var type = Type.GetType(typeName);
-            if (type == null)
-                throw new TypeLoadException($"Nie udało się załadować typu: {typeName}");
-
-            return (IManufacturerRepository)Activator.CreateInstance(type);
-        }
     }
 }

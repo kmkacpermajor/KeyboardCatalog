@@ -16,11 +16,10 @@ namespace UI_WPF
             base.OnStartup(e);
 
             // Use the factory to create repository instances
-            IProductRepository productRepository = RepositoryFactory.CreateProductRepository();
-            IManufacturerRepository manufacturerRepository = RepositoryFactory.CreateManufacturerRepository();
+            IDAO dao = DAOFactory.CreateDAO();
 
             // Pass repositories to the main window
-            var mainWindow = new ProductListWindow(productRepository, manufacturerRepository);
+            var mainWindow = new ProductListWindow(dao);
             mainWindow.Show();
         }
     }

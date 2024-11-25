@@ -23,12 +23,11 @@ namespace UI_WPF
     {
         public ProductFormViewModel ViewModel { get; private set; }
 
-        public ProductFormWindow(IProductRepository productRepository,
-                                 IManufacturerRepository manufacturerRepository,
+        public ProductFormWindow(IDAO dao,
                                  IProduct product = null)
         {
             InitializeComponent();
-            ViewModel = new ProductFormViewModel(productRepository, manufacturerRepository, this, product);
+            ViewModel = new ProductFormViewModel(dao, this, product);
             DataContext = ViewModel;
         }
     }

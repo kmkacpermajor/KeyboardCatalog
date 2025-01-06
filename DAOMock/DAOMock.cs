@@ -1,5 +1,5 @@
-﻿using CORE;
-using INTERFACES;
+﻿using LukomskiMajorkowski.KeyboardCatalog.CORE;
+using LukomskiMajorkowski.KeyboardCatalog.INTERFACES;
 using System;
 using System.Collections.Generic;
 using System.Linq;

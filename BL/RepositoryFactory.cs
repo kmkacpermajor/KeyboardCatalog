@@ -1,4 +1,4 @@
-﻿using INTERFACES;
+﻿using LukomskiMajorkowski.KeyboardCatalog.INTERFACES;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
 
-namespace BL
+namespace LukomskiMajorkowski.KeyboardCatalog.BL
 {
     public static class DAOFactory
     {

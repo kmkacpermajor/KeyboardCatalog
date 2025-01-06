@@ -1,11 +1,11 @@
-﻿using INTERFACES;
+﻿using LukomskiMajorkowski.KeyboardCatalog.INTERFACES;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UI_WPF.Models
+namespace LukomskiMajorkowski.KeyboardCatalog.UI_WPF.Models
 {
     public class Manufacturer : IManufacturer
     {

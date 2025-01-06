@@ -1,4 +1,4 @@
-﻿using INTERFACES;
+﻿using LukomskiMajorkowski.KeyboardCatalog.INTERFACES;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +12,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using UI_WPF.ViewModels;
+using LukomskiMajorkowski.KeyboardCatalog.UI_WPF.ViewModels;
 
-namespace UI_WPF
+namespace LukomskiMajorkowski.KeyboardCatalog.UI_WPF
 {
     /// <summary>
     /// Interaction logic for ManufacturerFormWindow.xaml

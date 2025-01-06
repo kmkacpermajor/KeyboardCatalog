@@ -1,8 +1,8 @@
-﻿using INTERFACES;
+﻿using LukomskiMajorkowski.KeyboardCatalog.INTERFACES;
 using System.Windows;
-using UI_WPF.ViewModels;
+using LukomskiMajorkowski.KeyboardCatalog.UI_WPF.ViewModels;
 
-namespace UI_WPF
+namespace LukomskiMajorkowski.KeyboardCatalog.UI_WPF
 {
     public partial class ProductListWindow : Window
     {

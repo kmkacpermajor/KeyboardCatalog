@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CORE
+namespace LukomskiMajorkowski.KeyboardCatalog.CORE
 {
     public enum KeyboardType
     {

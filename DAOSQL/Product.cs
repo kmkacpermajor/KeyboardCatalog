@@ -1,5 +1,5 @@
-﻿using CORE;
-using INTERFACES;
+﻿using LukomskiMajorkowski.KeyboardCatalog.CORE;
+using LukomskiMajorkowski.KeyboardCatalog.INTERFACES;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAOSQL
+namespace LukomskiMajorkowski.KeyboardCatalog.DAOSQL
 {
     public class Product : IProduct
     {

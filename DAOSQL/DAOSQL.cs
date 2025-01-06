@@ -1,9 +1,9 @@
-﻿using INTERFACES;
+﻿using LukomskiMajorkowski.KeyboardCatalog.INTERFACES;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DAOSQL
+namespace LukomskiMajorkowski.KeyboardCatalog.DAOSQL
 {
     public class DAOSQL : DbContext, IDAO
     {
@@ -18,7 +18,7 @@ namespace DAOSQL
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string path = @"C:\tmp\Keyboards.db";
+            string path = @"C:\Users\Kacper\source\repos\KeyboardCatalog\DAOSQL\Keyboards.db";
             optionsBuilder.UseSqlite($"Filename={path}");
         }
 

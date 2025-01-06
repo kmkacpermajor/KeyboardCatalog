@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using CORE;
-using INTERFACES;
+using LukomskiMajorkowski.KeyboardCatalog.CORE;
+using LukomskiMajorkowski.KeyboardCatalog.INTERFACES;
 
 namespace LukomskiMajorkowski.KeyboardCatalog.UI_Blazor.Models
 {

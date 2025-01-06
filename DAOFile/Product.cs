@@ -1,12 +1,12 @@
-﻿using CORE;
-using INTERFACES;
+﻿using LukomskiMajorkowski.KeyboardCatalog.CORE;
+using LukomskiMajorkowski.KeyboardCatalog.INTERFACES;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAOFile
+namespace LukomskiMajorkowski.KeyboardCatalog.DAOFile
 {
     public class Product : IProduct
     {

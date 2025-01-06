@@ -1,6 +1,6 @@
 using LukomskiMajorkowski.KeyboardCatalog.UI_Blazor.Components;
-using INTERFACES;
-using BL;
+using LukomskiMajorkowski.KeyboardCatalog.INTERFACES;
+using LukomskiMajorkowski.KeyboardCatalog.BL;
 using LukomskiMajorkowski.KeyboardCatalog.UI_Blazor;
 
 var builder = WebApplication.CreateBuilder(args);

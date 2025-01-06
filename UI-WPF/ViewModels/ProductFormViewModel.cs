@@ -1,13 +1,13 @@
-﻿using CORE;
-using INTERFACES;
+﻿using LukomskiMajorkowski.KeyboardCatalog.CORE;
+using LukomskiMajorkowski.KeyboardCatalog.INTERFACES;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
-using UI_WPF.Models;
+using LukomskiMajorkowski.KeyboardCatalog.UI_WPF.Models;
 
-namespace UI_WPF.ViewModels
+namespace LukomskiMajorkowski.KeyboardCatalog.UI_WPF.ViewModels
 {
     public class ProductFormViewModel : ViewModelBase, IDataErrorInfo
     {

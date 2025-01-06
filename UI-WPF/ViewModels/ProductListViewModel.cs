@@ -1,9 +1,9 @@
-﻿using INTERFACES;
+﻿using LukomskiMajorkowski.KeyboardCatalog.INTERFACES;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 
-namespace UI_WPF.ViewModels
+namespace LukomskiMajorkowski.KeyboardCatalog.UI_WPF.ViewModels
 {
     public class ProductListViewModel : ViewModelBase
     {

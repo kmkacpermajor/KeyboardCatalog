@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace DAOSQL.Migrations
+namespace LukomskiMajorkowski.KeyboardCatalog.DAOSQL.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

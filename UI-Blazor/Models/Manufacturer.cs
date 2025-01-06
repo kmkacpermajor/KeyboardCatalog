@@ -1,4 +1,4 @@
-﻿using INTERFACES;
+﻿using LukomskiMajorkowski.KeyboardCatalog.INTERFACES;
 using System.ComponentModel.DataAnnotations;
 
 namespace LukomskiMajorkowski.KeyboardCatalog.UI_Blazor.Models

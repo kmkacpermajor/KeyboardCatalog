@@ -1,12 +1,12 @@
-﻿using CORE;
-using INTERFACES;
+﻿using LukomskiMajorkowski.KeyboardCatalog.CORE;
+using LukomskiMajorkowski.KeyboardCatalog.INTERFACES;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 
-namespace DAOFile
+namespace LukomskiMajorkowski.KeyboardCatalog.DAOFile
 {
     public class DAOFile : IDAO, IDisposable
     {

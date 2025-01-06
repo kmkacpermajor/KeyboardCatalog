@@ -1,10 +1,10 @@
-﻿using BL;
-using INTERFACES;
+﻿using LukomskiMajorkowski.KeyboardCatalog.BL;
+using LukomskiMajorkowski.KeyboardCatalog.INTERFACES;
 using System.Configuration;
 using System.Data;
 using System.Windows;
 
-namespace UI_WPF
+namespace LukomskiMajorkowski.KeyboardCatalog.UI_WPF
 {
     /// <summary>
     /// Interaction logic for App.xaml

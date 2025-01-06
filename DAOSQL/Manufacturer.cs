@@ -1,11 +1,11 @@
-﻿using INTERFACES;
+﻿using LukomskiMajorkowski.KeyboardCatalog.INTERFACES;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAOSQL
+namespace LukomskiMajorkowski.KeyboardCatalog.DAOSQL
 {
     public class Manufacturer : IManufacturer
     {

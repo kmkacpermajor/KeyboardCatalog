@@ -1,11 +1,11 @@
-﻿using CORE;
+﻿using LukomskiMajorkowski.KeyboardCatalog.CORE;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace INTERFACES
+namespace LukomskiMajorkowski.KeyboardCatalog.INTERFACES
 {
     public interface IProduct
     {

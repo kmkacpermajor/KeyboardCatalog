@@ -1,7 +1,7 @@
-﻿using CORE;
+﻿using LukomskiMajorkowski.KeyboardCatalog.CORE;
 using System.Collections.Generic;
 
-namespace INTERFACES
+namespace LukomskiMajorkowski.KeyboardCatalog.INTERFACES
 {
     public interface IDAO
     {

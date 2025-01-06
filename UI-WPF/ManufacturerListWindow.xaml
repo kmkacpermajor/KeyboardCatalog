@@ -1,4 +1,4 @@
-﻿<Window x:Class="UI_WPF.ManufacturerListWindow"
+﻿<Window x:Class="LukomskiMajorkowski.KeyboardCatalog.UI_WPF.ManufacturerListWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Manufacturer List" Height="450" Width="600">

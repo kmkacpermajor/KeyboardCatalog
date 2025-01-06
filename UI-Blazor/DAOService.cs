@@ -1,8 +1,8 @@
-﻿using INTERFACES;
-using CORE;
+﻿using LukomskiMajorkowski.KeyboardCatalog.INTERFACES;
+using LukomskiMajorkowski.KeyboardCatalog.CORE;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BL;
+using LukomskiMajorkowski.KeyboardCatalog.BL;
 
 namespace LukomskiMajorkowski.KeyboardCatalog.UI_Blazor
 {

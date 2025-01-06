@@ -2,7 +2,7 @@
 using CORE;
 using INTERFACES;
 
-namespace UI_Blazor.Models
+namespace LukomskiMajorkowski.KeyboardCatalog.UI_Blazor.Models
 {
     public class Product
     {

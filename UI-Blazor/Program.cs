@@ -1,7 +1,7 @@
-using UI_Blazor.Components;
+using LukomskiMajorkowski.KeyboardCatalog.UI_Blazor.Components;
 using INTERFACES;
 using BL;
-using UI_Blazor;
+using LukomskiMajorkowski.KeyboardCatalog.UI_Blazor;
 
 var builder = WebApplication.CreateBuilder(args);
 

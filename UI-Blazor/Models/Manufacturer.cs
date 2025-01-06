@@ -1,7 +1,8 @@
 ﻿using INTERFACES;
 using System.ComponentModel.DataAnnotations;
 
-namespace UI_Blazor.Models{
+namespace LukomskiMajorkowski.KeyboardCatalog.UI_Blazor.Models
+{
     public class Manufacturer : IManufacturer
     {
         public int Id { get; set; }

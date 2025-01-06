@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BL;
 
-namespace UI_Blazor
+namespace LukomskiMajorkowski.KeyboardCatalog.UI_Blazor
 {
     public class DAOService
     {

@@ -1,25 +1,107 @@
 ﻿@page "/products"
+@page "/"
 @attribute [StreamRendering]
 @inject DAOService DAOService
 @using INTERFACES
 
 <PageTitle>Products</PageTitle>
 
+<h3>Lista Produktów</h3>
+<div class="d-flex mb-3">
+    <input type="text" class="form-control" placeholder="Szukaj produktów..." @bind="SearchTerm" />
+    <button class="btn btn-primary ms-2" @onclick="FilterProducts">Szukaj</button>
+</div>
 
-<h3>Produkty</h3>
+<div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nazwa</th>
+                <th>Typ</th>
+                <th>Producent</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in ProductList)
+            {
+                <tr class="@GetRowClass(product)"
+                    @onclick="() => SelectProduct(product)">
+                    <td>@product.Id</td>
+                    <td>@product.Name</td>
+                    <td>@product.Type</td>
+                    <td>@product.Manufacturer.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
-<ul>
-    @foreach (var product in products)
-    {
-        <li>@product.Name (@product.Manufacturer.Name)</li>
-    }
-</ul>
+<div class="d-flex justify-content-end">
+    <button class="btn btn-primary m-2" @onclick="AddProduct">Dodaj Produkt</button>
+    <button class="btn btn-secondary m-2" @onclick="EditProduct" disabled="@(!CanEdit)">Edytuj Produkt</button>
+    <button class="btn btn-danger m-2" @onclick="DeleteProduct" disabled="@(!CanDelete)">Usuń Produkt</button>
+    <button class="btn btn-info m-2" @onclick="NavigateToManufacturerList">Przejdź do Producentów</button>
+</div>
 
 @code {
-    private IEnumerable<IProduct> products;
+    private List<IProduct> ProductList = new();
+    private IProduct? SelectedProduct;
 
-    protected override void OnInitialized()
+    [Inject] private DAOService DaoService { get; set; }
+    [Inject] private NavigationManager NavigationManager { get; set; }
+
+    protected override async Task OnInitializedAsync()
     {
-        products = DAOService.GetAllProducts();
+        ProductList = DaoService.GetAllProducts().ToList();
+    }
+
+    private void SelectProduct(IProduct product)
+    {
+        SelectedProduct = product;
+    }
+
+    private string GetRowClass(IProduct product)
+    {
+        return product == SelectedProduct ? "table-primary" : string.Empty;
+    }
+
+    private bool CanEdit => SelectedProduct != null;
+    private bool CanDelete => SelectedProduct != null;
+
+    private void AddProduct()
+    {
+        NavigationManager.NavigateTo("/products/new");
+    }
+
+    private void EditProduct()
+    {
+        if (SelectedProduct != null)
+        {
+            NavigationManager.NavigateTo($"/products/edit/{SelectedProduct.Id}");
+        }
+    }
+
+    private void DeleteProduct()
+    {
+        if (SelectedProduct != null)
+        {
+            DaoService.DeleteProduct(SelectedProduct.Id);
+            ProductList = DaoService.GetAllProducts().ToList();
+        }
+    }
+
+    private void NavigateToManufacturerList()
+    {
+        NavigationManager.NavigateTo("/manufacturers");
+    }
+
+    private string SearchTerm = string.Empty;
+
+    private void FilterProducts()
+    {
+        ProductList = DaoService.GetAllProducts()
+            .Where(p => p.Name.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase))
+            .ToList();
     }
 }

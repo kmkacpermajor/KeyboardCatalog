@@ -1,0 +1,91 @@
+﻿@page "/products/new"
+@page "/products/edit/{Id:int}"
+@inject DAOService DAOService
+@inject NavigationManager NavigationManager
+@using INTERFACES
+@using CORE
+@using LukomskiMajorkowski.KeyboardCatalog.UI_Blazor.Models
+<PageTitle>Product Form</PageTitle>
+
+<h3>Formularz Produktu</h3>
+<div class="form-group">
+    <label for="name">Nazwa produktu:</label>
+    <input id="name" type="text" class="form-control" @bind="Product.Name" />
+</div>
+
+<div class="form-group">
+    <label for="type">Typ klawiatury:</label>
+    <select id="type" class="form-control" @bind="Product.Type">
+        @foreach (var type in KeyboardTypes)
+        {
+            <option value="@type">@type</option>
+        }
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="manufacturer">Producent:</label>
+    <select id="manufacturer" class="form-control" @bind="SelectedManufacturerId">
+        @foreach (var manufacturer in Manufacturers)
+        {
+            <option value="@manufacturer.Id">@manufacturer.Name</option>
+        }
+    </select>
+</div>
+
+<div class="d-flex justify-content-end mt-3">
+    <button class="btn btn-primary" @onclick="SaveProduct">Zapisz</button>
+    <button class="btn btn-secondary ms-2" @onclick="Cancel">Anuluj</button>
+</div>
+
+@code {
+    [Inject] private DAOService DaoService { get; set; }
+    [Parameter] public int? Id { get; set; }
+    private IProduct Product = new Product();
+    private List<IManufacturer> Manufacturers = new();
+    private IEnumerable<string> KeyboardTypes = Enum.GetNames(typeof(KeyboardType));
+    private int SelectedManufacturerId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Manufacturers = DaoService.GetAllManufacturers().ToList();
+
+        if (Id.HasValue)
+        {
+            Product = DaoService.GetProductById(Id.Value);
+            SelectedManufacturerId = Product.Manufacturer.Id; // Ustaw domyślnie na ID istniejącego producenta
+        }
+        else if (Manufacturers.Any())
+        {
+            SelectedManufacturerId = Manufacturers.First().Id; // Domyślny wybór pierwszego producenta
+        }
+    }
+
+    private void SaveProduct()
+    {
+        if (string.IsNullOrWhiteSpace(Product.Name))
+        {
+            Console.WriteLine("Błąd: Uzupełnij wszystkie wymagane pola.");
+            return;
+        }
+
+        // Znajdź producenta na podstawie ID
+        Product.Manufacturer = Manufacturers.FirstOrDefault(m => m.Id == SelectedManufacturerId);
+
+        if (Id.HasValue)
+        {
+            DaoService.UpdateProduct(Product);
+        }
+        else
+        {
+            DaoService.AddProduct(Product);
+        }
+
+        NavigationManager.NavigateTo("/products");
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/products");
+    }
+}

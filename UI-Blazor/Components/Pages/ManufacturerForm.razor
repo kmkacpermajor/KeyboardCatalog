@@ -1,0 +1,58 @@
+﻿@page "/manufacturers/new"
+@page "/manufacturers/edit/{Id:int}"
+@inject DAOService DAOService
+@inject NavigationManager NavigationManager
+@using INTERFACES
+@using CORE
+@using LukomskiMajorkowski.KeyboardCatalog.UI_Blazor.Models
+<PageTitle>Manufacturer Form</PageTitle>
+
+<h3>Formularz Producenta</h3>
+<div class="form-group">
+    <label for="name">Nazwa producenta:</label>
+    <input id="name" type="text" class="form-control" @bind="Manufacturer.Name" />
+</div>
+
+<div class="d-flex justify-content-end mt-3">
+    <button class="btn btn-primary" @onclick="SaveManufacturer">Zapisz</button>
+    <button class="btn btn-secondary ms-2" @onclick="Cancel">Anuluj</button>
+</div>
+
+@code {
+    [Inject] private DAOService DaoService { get; set; }
+    [Parameter] public int? Id { get; set; }
+    private IManufacturer Manufacturer = new Manufacturer();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id.HasValue)
+        {
+            Manufacturer = DaoService.GetManufacturerById(Id.Value);
+        }
+    }
+
+    private void SaveManufacturer()
+    {
+        if (string.IsNullOrWhiteSpace(Manufacturer.Name))
+        {
+            Console.WriteLine("Błąd: Uzupełnij wszystkie wymagane pola.");
+            return;
+        }
+
+        if (Id.HasValue)
+        {
+            DaoService.UpdateManufacturer(Manufacturer);
+        }
+        else
+        {
+            DaoService.AddManufacturer(Manufacturer);
+        }
+
+        NavigationManager.NavigateTo("/manufacturers");
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/manufacturers");
+    }
+}

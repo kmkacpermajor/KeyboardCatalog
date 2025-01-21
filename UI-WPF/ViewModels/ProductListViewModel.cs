@@ -1,6 +1,6 @@
 ﻿using LukomskiMajorkowski.KeyboardCatalog.INTERFACES;
 using System.Collections.ObjectModel;
-using System.Windows;
+using System.Linq;
 using System.Windows.Input;
 
 namespace LukomskiMajorkowski.KeyboardCatalog.UI_WPF.ViewModels
@@ -11,6 +11,29 @@ namespace LukomskiMajorkowski.KeyboardCatalog.UI_WPF.ViewModels
 
         public ObservableCollection<IProduct> Products { get; set; }
 
+        private ObservableCollection<IProduct> _filteredProducts;
+        public ObservableCollection<IProduct> FilteredProducts
+        {
+            get => _filteredProducts;
+            set
+            {
+                _filteredProducts = value;
+                OnPropertyChanged(nameof(FilteredProducts));
+            }
+        }
+
+        private string _searchText;
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                _searchText = value;
+                OnPropertyChanged(nameof(SearchText));
+                FilterProducts();
+            }
+        }
+
         private IProduct _selectedProduct;
         public IProduct SelectedProduct
         {
@@ -19,8 +42,8 @@ namespace LukomskiMajorkowski.KeyboardCatalog.UI_WPF.ViewModels
             {
                 _selectedProduct = value;
                 OnPropertyChanged(nameof(SelectedProduct));
-                OnPropertyChanged(nameof(IsEditEnabled)); // Notify that IsEditEnabled has changed
-                OnPropertyChanged(nameof(IsDeleteEnabled)); // Notify that IsDeleteEnabled has changed
+                OnPropertyChanged(nameof(IsEditEnabled));
+                OnPropertyChanged(nameof(IsDeleteEnabled));
             }
         }
 
@@ -29,14 +52,15 @@ namespace LukomskiMajorkowski.KeyboardCatalog.UI_WPF.ViewModels
         public ICommand DeleteProductCommand { get; }
         public ICommand GoToManufacturerListCommand { get; }
 
-        public bool IsEditEnabled => SelectedProduct != null; // Inline check for Edit button
-        public bool IsDeleteEnabled => SelectedProduct != null; // Inline check for Delete button
+        public bool IsEditEnabled => SelectedProduct != null;
+        public bool IsDeleteEnabled => SelectedProduct != null;
 
         public ProductListViewModel(IDAO dao)
         {
             _dao = dao;
 
             Products = new ObservableCollection<IProduct>(_dao.GetAllProducts());
+            FilteredProducts = new ObservableCollection<IProduct>(Products);
 
             AddProductCommand = new RelayCommand<object>(_ => OpenAddProductForm());
             EditProductCommand = new RelayCommand<IProduct>(OpenEditProductForm, CanEditProduct);
@@ -71,24 +95,35 @@ namespace LukomskiMajorkowski.KeyboardCatalog.UI_WPF.ViewModels
         private void RefreshProducts()
         {
             Products.Clear();
-            var sortedProducts = _dao.GetAllProducts().OrderBy(p => p.Id); // Sort by ID
+            var sortedProducts = _dao.GetAllProducts().OrderBy(p => p.Id);
             foreach (var product in sortedProducts)
             {
                 Products.Add(product);
             }
+            FilterProducts();
         }
 
-        private bool CanEditProduct(IProduct product)
+        private void FilterProducts()
         {
-            return product != null;
+            if (string.IsNullOrWhiteSpace(SearchText))
+            {
+                FilteredProducts = new ObservableCollection<IProduct>(Products);
+            }
+            else
+            {
+                var lowerSearchText = SearchText.ToLower();
+                FilteredProducts = new ObservableCollection<IProduct>(
+                    Products.Where(p => p.Id.ToString().Contains(lowerSearchText) ||
+                                        p.Name.ToLower().Contains(lowerSearchText) ||
+                                        p.Type.ToString().ToLower().Contains(lowerSearchText) ||
+                                        p.Manufacturer?.Name.ToLower().Contains(lowerSearchText) == true));
+            }
         }
 
-        private bool CanDeleteProduct(IProduct product)
-        {
-            return product != null;
-        }
+        private bool CanEditProduct(IProduct product) => product != null;
 
-        // Open the Manufacturer List window
+        private bool CanDeleteProduct(IProduct product) => product != null;
+
         private void OpenManufacturerList()
         {
             var manufacturerListWindow = new ManufacturerListWindow(_dao);

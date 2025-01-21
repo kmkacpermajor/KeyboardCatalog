@@ -10,5 +10,6 @@
 
         <Button Content="Save" Command="{Binding SaveCommand}" Width="100" 
                 HorizontalAlignment="Right"/>
+    
     </StackPanel>
 </Window>

@@ -4,7 +4,14 @@
         Title="Product List" Height="450" Width="600">
     <StackPanel>
         <TextBlock Text="Product List" FontSize="20" FontWeight="Bold" Margin="10"/>
-        <DataGrid ItemsSource="{Binding Products}" AutoGenerateColumns="False" IsReadOnly="True" 
+
+        <!-- Search Section -->
+        <StackPanel Orientation="Horizontal" Margin="10">
+            <TextBlock Text="Search:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+            <TextBox Width="200" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
+
+        <DataGrid ItemsSource="{Binding FilteredProducts}" AutoGenerateColumns="False" IsReadOnly="True" 
                   SelectedItem="{Binding SelectedProduct}" Margin="10">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
@@ -27,7 +34,6 @@
         HorizontalAlignment="Left" 
         VerticalAlignment="Top"
         IsEnabled="{Binding IsEditEnabled}"/>
-            <!-- Bind to IsEditEnabled -->
 
             <Button Content="Delete Product"
         Command="{Binding DeleteProductCommand}"
@@ -36,7 +42,6 @@
         HorizontalAlignment="Left" 
         VerticalAlignment="Top"
         IsEnabled="{Binding IsDeleteEnabled}"/>
-            <!-- Bind to IsDeleteEnabled -->
 
             <Button Content="Go to Manufacturer List"
         Command="{Binding GoToManufacturerListCommand}"

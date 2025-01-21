@@ -4,7 +4,7 @@ using LukomskiMajorkowski.KeyboardCatalog.INTERFACES;
 
 namespace LukomskiMajorkowski.KeyboardCatalog.UI_Blazor.Models
 {
-    public class Product
+    public class Product: IProduct
     {
         public int Id { get; set; }
 

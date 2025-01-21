@@ -1,0 +1,103 @@
+﻿@page "/manufacturers"
+@attribute [StreamRendering]
+@inject DAOService DAOService
+@using INTERFACES
+
+<PageTitle>Manufacturers</PageTitle>
+
+<h3>Lista Producentów</h3>
+<div class="d-flex mb-3">
+    <input type="text" class="form-control" placeholder="Szukaj producentów..." @bind="SearchTerm" />
+    <button class="btn btn-primary ms-2" @onclick="FilterManufacturers">Szukaj</button>
+</div>
+
+<div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nazwa</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var manufacturer in ManufacturerList)
+            {
+                <tr class="@GetRowClass(manufacturer)"
+                    @onclick="() => SelectManufacturer(manufacturer)">
+                    <td>@manufacturer.Id</td>
+                    <td>@manufacturer.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="d-flex justify-content-end">
+    <button class="btn btn-primary m-2" @onclick="AddManufacturer">Dodaj Producenta</button>
+    <button class="btn btn-secondary m-2" @onclick="EditManufacturer" disabled="@(!CanEdit)">Edytuj Producenta</button>
+    <button class="btn btn-danger m-2" @onclick="DeleteManufacturer" disabled="@(!CanDelete)">Usuń Producenta</button>
+    <button class="btn btn-info m-2" @onclick="NavigateToProductList">Przejdź do Produktów</button>
+</div>
+
+@code {
+    private List<IManufacturer> ManufacturerList = new();
+    private IManufacturer? SelectedManufacturer;
+
+    // Wstrzyknięcie DAOService
+    [Inject] private DAOService DaoService { get; set; }
+    [Inject] private NavigationManager NavigationManager { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ManufacturerList = DaoService.GetAllManufacturers().ToList();
+    }
+
+    private void SelectManufacturer(IManufacturer manufacturer)
+    {
+        SelectedManufacturer = manufacturer;
+    }
+
+    private string GetRowClass(IManufacturer manufacturer)
+    {
+        return manufacturer == SelectedManufacturer ? "table-primary" : string.Empty;
+    }
+
+    private bool CanEdit => SelectedManufacturer != null;
+    private bool CanDelete => SelectedManufacturer != null;
+
+    private void AddManufacturer()
+    {
+        NavigationManager.NavigateTo("/manufacturers/new");
+    }
+
+    private void EditManufacturer()
+    {
+        if (SelectedManufacturer != null)
+        {
+            NavigationManager.NavigateTo($"/manufacturers/edit/{SelectedManufacturer.Id}");
+        }
+    }
+
+    private void DeleteManufacturer()
+    {
+        if (SelectedManufacturer != null)
+        {
+            DaoService.DeleteManufacturer(SelectedManufacturer.Id);
+            ManufacturerList = DaoService.GetAllManufacturers().ToList();
+        }
+    }
+
+    private void NavigateToProductList()
+    {
+        NavigationManager.NavigateTo("/products");
+    }
+
+    private string SearchTerm = string.Empty;
+
+    private void FilterManufacturers()
+    {
+        ManufacturerList = DaoService.GetAllManufacturers()
+            .Where(m => m.Name.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+}
